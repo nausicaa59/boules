@@ -48,13 +48,13 @@ class TranslateError(errors.BasicErrorHandler):
 
 
 def clean(fonction_a_decorer):
-     def un_wrapper_acceptant_des_arguments(*args, **kwargs):
+     def cleanWrapper(*args, **kwargs):
         result = fonction_a_decorer(*args, **kwargs)
         if isinstance(result, dict) == False:
         	return result
         return result
 
-     return un_wrapper_acceptant_des_arguments
+     return cleanWrapper
 
 
 

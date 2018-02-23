@@ -1,8 +1,9 @@
 import pymysql
 import time
-import model
+
 import random
-import joueur
+from . import model
+from . import joueur
 from datetime import datetime
 from faker import Faker
 from pony.orm import *
@@ -46,6 +47,7 @@ for _ in range(0,nbJoueur):
 		"prenom"		: fake.first_name(),
 		"pseudo"		: fake.user_name(),
 		"password"		: fake.word(),
+		"actif"			: 1,
 		"email"			: fake.safe_email()
 	})
 

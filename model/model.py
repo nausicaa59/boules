@@ -51,7 +51,7 @@ def prepareDb():
 		prenom				= Required(str)
 		pseudo 				= Required(str)
 		password			= Required(str)
-		actif				= Optional(int, default=1)
+		actif				= Required(int, default=1)
 		email				= Required(str)
 		participations		= Set('Participation', reverse="joueur")
 

@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 
 
+
 @app.route("/joueur", methods=['GET'])
 def joueurShowList():
 	joueurs = mJoueur.getAll(g.db)
@@ -32,9 +33,20 @@ def joueurShow(id):
 
 @app.route("/joueur", methods=['POST'])
 def joueurCreate():
+	data = request.get_json()
+	validation = mJoueur.validerCandidat(g.db, data)
+	if validation[0] == False:
+		return app.response_class(
+			response=json.dumps(validation[1]),
+			status=400,
+			mimetype='application/json'
+		)
+
+	creation = mJoueur.create(g.db, data)
+	codeReponse = 200 if creation[0] else 500
 	return app.response_class(
-		response=json.dumps(request.form.to_dict()),
-		status=200,
+		response=json.dumps(creation[1]),
+		status=codeReponse,
 		mimetype='application/json'
 	)	
 
@@ -42,9 +54,28 @@ def joueurCreate():
 
 @app.route("/joueur/<int:id>", methods=['PUT'])
 def joueurEdit(id):
+	joueur = mJoueur.getFull(g.db, id)
+	if joueur[0] == False:		
+		return app.response_class(
+			response=json.dumps(joueur[1]),
+			status=404,
+			mimetype='application/json'
+		)
+
+	data = request.get_json()
+	validation = mJoueur.validerCandidat(g.db, data)
+	if validation[0] == False:
+		return app.response_class(
+			response=json.dumps(validation[1]),
+			status=400,
+			mimetype='application/json'
+		)
+
+	edition = mJoueur.update(g.db, id, data)
+	codeReponse = 200 if edition[0] else 500
 	return app.response_class(
-		response=json.dumps(["joueur edité " + str(id)]),
-		status=200,
+		response=json.dumps(edition[1]),
+		status=codeReponse,
 		mimetype='application/json'
 	)
 
@@ -52,31 +83,30 @@ def joueurEdit(id):
 
 @app.route("/joueur/<int:id>", methods=['DELETE'])
 def joueurDelet(id):
-	return app.response_class(
-		response=json.dumps(["joueur supprimé " + str(id)]),
-		status=200,
-		mimetype='application/json'
-	)
-
-
-
-'''
-@app.route("/joueur/<int:idJoueur>")
-def joueur(idJoueur):
-	j = mJoueur.getFull(g.db, idJoueur)
-	if j == False:
+	joueur = mJoueur.getFull(g.db, id)
+	if joueur[0] == False:		
 		return app.response_class(
-			response=json.dumps({}),
+			response=json.dumps(joueur[1]),
 			status=404,
 			mimetype='application/json'
 		)
 
+	if len(joueur[1]["participations"]) > 0:
+		return app.response_class(
+			response=json.dumps(["impossible de supprimer le joueur, il a déja participé a un concours"]),
+			status=404,
+			mimetype='application/json'
+		)
+
+
+	suppression = mJoueur.delete(g.db, id)
+	codeReponse = 200 if suppression[0] else 500
 	return app.response_class(
-		response=json.dumps(j),
-		status=404,
+		response=json.dumps(suppression[1]),
+		status=codeReponse,
 		mimetype='application/json'
 	)
-'''
+
 
 
 @app.before_request
@@ -91,3 +121,16 @@ def close_connection(exception):
 	db = getattr(g, 'db', None)
 	if db is not None:
 		db.disconnect()
+
+
+'''
+def requires_auth(authorized, unauthorized):
+	def logTestDecorateur(fonction_a_decorer):
+		def logWrapper(*args, **kwargs):
+			print(authorized, unauthorized)
+			result = fonction_a_decorer(*args, **kwargs)			
+			return result
+		return logWrapper
+	print("apres")
+	return logTestDecorateur
+'''
