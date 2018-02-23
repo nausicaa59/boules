@@ -123,6 +123,7 @@ def close_connection(exception):
 		db.disconnect()
 
 
+
 '''
 def requires_auth(authorized, unauthorized):
 	def logTestDecorateur(fonction_a_decorer):
