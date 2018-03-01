@@ -71,7 +71,7 @@ def create(db, j):
 @db_session
 def update(db, id, d):
 	try:
-		d["updated_at"] = updated_at = datetime.now()
+		d["updated_at"] = datetime.now()
 		joueur = db.Joueur[id]
 		joueur.set(**d)		
 		return (True, joueur.to_dict_prepara())

@@ -35,7 +35,8 @@ for i in range(0,nbSaison):
 		"created_at"	: datetime.now(),
 		"updated_at"	: datetime.now(),
 		"date_start"	: datetime(2018 - i, 3, 31, 0, 0, 0),
-		"date_close"	: datetime(2019 - i, 3, 30, 0, 0, 0)
+		"date_close"	: datetime(2019 - i, 3, 30, 0, 0, 0),
+		"nom"			: "Saison " + str(i+1)
 	})
 
 
@@ -68,7 +69,8 @@ for i in range(len(objSaisons)):
 			"created_at"	: datetime.now(),
 			"updated_at"	: datetime.now(),
 			"date_start"	: datetime(2018 - i, 3 + m, 3 + m, 0, 0, 0),
-			"saison"		: objSaisons[i].id
+			"saison"		: objSaisons[i].id,
+			"nom"			: "Challenge " + str(m+1)
 		})
 
 with db_session:

@@ -14,14 +14,15 @@ def prepareDb():
 		updated_at 			= Required(datetime.datetime, 6)
 		date_start			= Required(datetime.datetime, 6)
 		date_close			= Required(datetime.datetime, 6)
+		nom 				= Required(str)
 		challenges 			= Set('Challenge', reverse="saison")
 
 		def to_dict_prepara(self):
 			base = self.to_dict()
 			base["created_at"] 			= base["created_at"].strftime('%Y-%m-%d %H:%M:%S')
 			base["updated_at"] 			= base["updated_at"].strftime('%Y-%m-%d %H:%M:%S')
-			base["date_start"] 			= base["created_at"].strftime('%Y-%m-%d %H:%M:%S')
-			base["date_close"] 			= base["updated_at"].strftime('%Y-%m-%d %H:%M:%S')
+			base["date_start"] 			= base["date_start"].strftime('%Y-%m-%d %H:%M:%S')
+			base["date_close"] 			= base["date_close"].strftime('%Y-%m-%d %H:%M:%S')
 			return base
 
 
@@ -32,13 +33,14 @@ def prepareDb():
 		updated_at 			= Required(datetime.datetime, 6)
 		date_start			= Required(datetime.datetime, 6)
 		saison 				= Required(Saison, reverse="challenges")
+		nom 				= Required(str)
 		participations		= Set('Participation', reverse="challenge")
 
 		def to_dict_prepara(self):
 			base = self.to_dict()
 			base["created_at"] 			= base["created_at"].strftime('%Y-%m-%d %H:%M:%S')
 			base["updated_at"] 			= base["updated_at"].strftime('%Y-%m-%d %H:%M:%S')
-			base["date_start"] 			= base["created_at"].strftime('%Y-%m-%d %H:%M:%S')
+			base["date_start"] 			= base["date_start"].strftime('%Y-%m-%d %H:%M:%S')
 			return base
 
 
