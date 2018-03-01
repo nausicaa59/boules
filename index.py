@@ -34,6 +34,7 @@ def joueurShow(id):
 @app.route("/joueur", methods=['POST'])
 def joueurCreate():
 	data = request.get_json()
+	data = {} if data == None else data
 	validation = mJoueur.validerCandidat(g.db, data)
 	if validation[0] == False:
 		return app.response_class(
@@ -63,6 +64,7 @@ def joueurEdit(id):
 		)
 
 	data = request.get_json()
+	data = {} if data == None else data
 	validation = mJoueur.validerCandidat(g.db, data)
 	if validation[0] == False:
 		return app.response_class(

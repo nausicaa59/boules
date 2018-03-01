@@ -13,7 +13,7 @@ schema = {
 	'prenom'	: {'type': 'string', 'empty': False, 'required' : True},
 	'pseudo'	: {'type': 'string', 'empty': False, 'required' : True},
 	'password'	: {'type': 'string', 'empty': False, 'required' : True},
-	'email'		: {'type': 'string', 'empty': False, 'required' : True},
+	'email'		: {'type': 'string', 'empty': True, 'required' : True},
 	'actif'		: {'type': 'integer', 'empty': False, 'required' : True, 'allowed' : [0,1]},
 }
 
@@ -95,7 +95,7 @@ def validerCandidat(db, c):
 	if v.validate(c) == False :
 		return (False, v.errors)
 
-	if c["email"] != "null" and validus.isemail(c["email"]) == False:
+	if c["email"] != "" and validus.isemail(c["email"]) == False:
 		return (False, {"email" : "L'email non valide"})
 
 	return (True, {})

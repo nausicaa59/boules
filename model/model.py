@@ -52,7 +52,7 @@ def prepareDb():
 		pseudo 				= Required(str)
 		password			= Required(str)
 		actif				= Required(int, default=1)
-		email				= Required(str)
+		email				= Optional(str, default='')
 		participations		= Set('Participation', reverse="joueur")
 
 		def to_dict_prepara(self):
