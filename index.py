@@ -3,6 +3,7 @@ from pony.orm import *
 from model import model
 import model.joueur as mJoueur
 import model.saison as mSaison
+import model.challenge as mChallenge
 app = Flask(__name__)
 
 
@@ -247,6 +248,79 @@ def saisonDelet(id):
 		status=codeReponse,
 		mimetype='application/json'
 	)
+
+
+@app.route("/saison/<int:id>/challenges", methods=['GET'])
+def saisonShowAllChallenges(id):
+	(valide, vals) = mSaison.getFull(g.db, id)
+	if valide == False:
+		return app.response_class(
+			response=json.dumps(saison),
+			status=404,
+			mimetype='application/json'
+		)		
+
+	(valide, vals) = mChallenge.getAllBySaison(g.db, id)
+	codeReponse = 200 if valide else 500
+	return app.response_class(
+		response=json.dumps(vals),
+		status=codeReponse,
+		mimetype='application/json'
+	)
+
+
+'''
+--------------------
+Challenges
+--------------------
+'''
+@app.route("/challenge/<int:id>", methods=['GET'])
+def challengeShow(id):
+	(valide, vals) = mChallenge.getFull(g.db, id)
+	codeReponse = 200 if valide else 404
+	return app.response_class(
+		response=json.dumps(vals),
+		status=codeReponse,
+		mimetype='application/json'
+	)
+
+
+
+@app.route("/challenge", methods=['POST'])
+def challengeCreate():
+	data = request.get_json()
+	data = {} if data == None else data
+	(valide, err) = mChallenge.validerCandidat(g.db, data)
+	if valide == False:
+		return app.response_class(
+			response=json.dumps(err),
+			status=400,
+			mimetype='application/json'
+		)
+
+	(valide, saison) = mSaison.getFull(g.db, data["saison"])
+	if valide == False:
+		return app.response_class(
+			response=json.dumps(saison),
+			status=404,
+			mimetype='application/json'
+		)
+
+	(valide, challenge) = mChallenge.create(g.db, data)
+	codeReponse = 200 if valide else 500
+	return app.response_class(
+		response=json.dumps(challenge),
+		status=codeReponse,
+		mimetype='application/json'
+	)
+
+	return app.response_class(
+		response=json.dumps(data),
+		status=200,
+		mimetype='application/json'
+	)	
+
+
 
 
 
